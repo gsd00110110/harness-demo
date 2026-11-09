@@ -1,0 +1,23 @@
+# Dependencies
+node_modules
+
+# Git files
+.git
+.gitignore
+
+# Documentation
+README.md
+
+# Local config
+.env
+.env.*
+
+# IDE files
+.vscode
+.idea
+
+# Logs
+npm-debug.log*
+
+# Docker files (optional)
+.dockerignore

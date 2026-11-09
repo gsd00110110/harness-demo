@@ -1,0 +1,1 @@
+docker run -d --cpus=1 --memory=2g -e DELEGATE_NAME=docker-delegate -e NEXT_GEN="true" -e DELEGATE_TYPE="DOCKER" -e ACCOUNT_ID=dvnP94nCQ7-y5kPHdwNqWA -e DELEGATE_TOKEN=NTAxOTY2YWJlODk4NDVkNmE4NmJjMTJmYThjYjExOTQ= -e DELEGATE_TAGS="" -e MANAGER_HOST_AND_PORT=https://app.harness.io us-docker.pkg.dev/gar-prod-setup/harness-public/harness/delegate:26.10.90313
