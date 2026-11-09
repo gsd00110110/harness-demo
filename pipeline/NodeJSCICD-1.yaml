@@ -60,5 +60,5 @@ pipeline:
     - id: placeholder
       name: Placeholder
       run:
-        script: echo "trigger in harness setup to trigger cicd after commit into github to start the pipeline"
+        script: echo "trigger in harness to trigger cicd after commit into github to start the pipeline"
 
