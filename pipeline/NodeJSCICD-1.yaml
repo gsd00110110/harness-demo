@@ -56,9 +56,9 @@ pipeline:
       on-failure:
         errors: all
         action: stage-rollback
-        
+
     - id: placeholder
       name: Placeholder
       run:
-        script: echo "Blank stage placeholder"
+        script: echo "Checking trigger github to start the pipeline"
 
