@@ -56,3 +56,9 @@ pipeline:
       on-failure:
         errors: all
         action: stage-rollback
+        
+    - id: placeholder
+      name: Placeholder
+      run:
+        script: echo "Blank stage placeholder"
+
