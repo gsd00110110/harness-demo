@@ -1,0 +1,58 @@
+pipeline:
+  id: NodeJSCICD_1
+  name: NodeJSCICD-1
+  description: Build the Node.js app image, push it to Docker Hub, and deploy it to the local Kubernetes cluster.
+  clone:
+    enabled: true
+    connector: httpsgithubcomgsd00110110harness_demo
+    repo: gsd00110110/harness-demo
+    ref:
+      type: branch
+      name: main
+  stages:
+    - id: build
+      name: Build and Push
+      runtime: cloud
+      platform:
+        os: linux
+        arch: amd64
+      steps:
+        - id: build_and_push
+          name: Build and Push Image
+          build:
+            uses: buildAndPushToDocker
+            with:
+              connector: httpshubdockercomrepositorydockergsd00110110harnessgeneral
+              repo: gsd00110110/harness
+              tags:
+                - v4
+    - id: deploy
+      name: Deploy to Local K8s
+      service:
+        items:
+          - nodeapp
+      environment:
+        items:
+          - id: local_k8s
+            deploy-to: local_k8s_infra
+      runtime:
+        kubernetes:
+          connector: connector_K8sCluster_a5eb
+          namespace: nodeapp
+      steps:
+        - id: k8sRollingDeployStep
+          name: Kubernetes Rolling Deploy
+          template:
+            uses: k8sRollingDeployStep
+      rollback:
+        - group:
+            id: k8sRollingRollback
+            name: Kubernetes Rolling Rollback
+            steps:
+              - id: k8sRollingRollbackStep
+                name: Kubernetes Rolling Rollback
+                template:
+                  uses: k8sRollingRollbackStep
+      on-failure:
+        errors: all
+        action: stage-rollback
