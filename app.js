@@ -14,11 +14,11 @@ app.get("/health", (req, res) => {
 // App endpoint
 app.get("/", (req, res) => {
   res.json({
-    app: "Harness CI/CD Demo test on nov 10 to check the triggering of pipeline from github commit",
+    app: "Harness CI/CD Demo",
     version: process.env.APP_VERSION || "1.0.0",
     build: process.env.BUILD_NUMBER || "local",
     environment: process.env.NODE_ENV || "development",
-    message: "Hello from Harness CI/CD!"
+    message: "Harness CI/CD Demo test on nov 10 to check the triggering of pipeline from github commit"
   });
 });
 
