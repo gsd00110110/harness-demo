@@ -25,7 +25,7 @@ pipeline:
               connector: httpshubdockercomrepositorydockergsd00110110harnessgeneral
               repo: gsd00110110/harness
               tags:
-                - v4
+                - v5
     - id: deploy
       name: Deploy to Local K8s
       service:
