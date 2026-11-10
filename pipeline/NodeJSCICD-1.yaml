@@ -56,9 +56,3 @@ pipeline:
       on-failure:
         errors: all
         action: stage-rollback
-
-    - id: placeholder
-      name: Placeholder
-      run:
-        script: echo "trigger in harness to trigger cicd after commit into github to start the pipeline"
-
