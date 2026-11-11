@@ -36,7 +36,7 @@ pipeline:
           approval:
             uses: harness
             with:
-              message: Please select the target environment and review the deployment.
+              message: Please select the target environment and review/approve the deployment.
               user-groups:
                 - approvers_group
               approvers-min-count: 1
