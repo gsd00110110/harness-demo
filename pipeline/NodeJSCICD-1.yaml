@@ -29,6 +29,9 @@ pipeline:
     - id: approve_deploy
       name: Approve Deployment
       steps:
+        inputs:
+      env_name:
+        type: string
         - id: manual_approval
           name: Manual Approval
           timeout: 1d
