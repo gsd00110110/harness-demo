@@ -2,6 +2,11 @@ pipeline:
   id: NodeJSCICD_1
   name: NodeJSCICD-1
   description: Build the Node.js app image, push it to Docker Hub, require manual approval, and deploy it to the local Kubernetes cluster.
+  inputs:
+  image_tag:
+    type: string
+    description: Enter the Docker image tag (example: v7)
+    required: true
   clone:
     enabled: true
     connector: httpsgithubcomgsd00110110harness_demo
@@ -25,7 +30,7 @@ pipeline:
               connector: httpshubdockercomrepositorydockergsd00110110harnessgeneral
               repo: gsd00110110/harness
               tags:
-                - v7
+                - <+input>.image_tag
     
     - id: approve_deploy
       name: Approve Deployment
