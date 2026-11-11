@@ -1,7 +1,7 @@
 pipeline:
   id: NodeJSCICD_1
   name: NodeJSCICD-1
-  description: Build the Node.js app image, push it to Docker Hub, and deploy it to the local Kubernetes cluster.
+  description: Build the Node.js app image, push it to Docker Hub, require manual approval, and deploy it to the local Kubernetes cluster.
   clone:
     enabled: true
     connector: httpsgithubcomgsd00110110harness_demo
@@ -28,27 +28,22 @@ pipeline:
                 - v7
     - id: approve_deploy
       name: Approve Deployment
-      type: Approval
-      spec:
-        execution:
-          steps:
-            - id: manual_approval
-              name: Manual Approval
-              type: HarnessApproval
-              spec:
-                approvalMessage: Please review and approve the deployment to local Kubernetes.
-                includeQRCode: false
-                approvers:
-                  userGroups:
-                    - approvers_group
-                  minimumCount: 1
-                  disallowPipelineInitiator: false
-                executionTimeout: 1d
+      steps:
+        - id: manual_approval
+          name: Manual Approval
+          timeout: 1d
+          approval:
+            uses: harness
+            with:
+              message: Please review and approve the deployment to local Kubernetes.
+              user-groups: [approvers_group]
+              approvers-min-count: 1
+              block-executor: false
     - id: deploy
       name: Deploy to Local K8s
       service:
         items:
-          - nodeapp
+          - id: nodeapp
       environment:
         items:
           - id: local_k8s
@@ -71,6 +66,8 @@ pipeline:
                 name: Kubernetes Rolling Rollback
                 template:
                   uses: k8sRollingRollbackStep
+          id: group_1
+          name: group_1
       on-failure:
         errors: all
         action: stage-rollback
