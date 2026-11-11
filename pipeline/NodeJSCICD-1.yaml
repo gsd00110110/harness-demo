@@ -26,22 +26,30 @@ pipeline:
               repo: gsd00110110/harness
               tags:
                 - v7
+    
     - id: approve_deploy
       name: Approve Deployment
       steps:
-        inputs:
-      env_name:
-        type: string
         - id: manual_approval
           name: Manual Approval
           timeout: 1d
           approval:
             uses: harness
             with:
-              message: Please review and approve the deployment to local Kubernetes.
-              user-groups: [approvers_group]
+              message: Please select the target environment and review the deployment.
+              user-groups:
+                - approvers_group
               approvers-min-count: 1
               block-executor: false
+              inputs:
+                env_name:
+                  description: Select the deployment environment
+                  enum:
+                    - dev
+                    - qa
+                    - prod
+                  required: true
+
     - id: deploy
       name: Deploy to Local K8s
       service:
