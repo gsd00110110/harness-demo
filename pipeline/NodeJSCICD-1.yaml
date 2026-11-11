@@ -26,6 +26,17 @@ pipeline:
               repo: gsd00110110/harness
               tags:
                 - v7
+    - id: approve_deploy
+      name: Approve Deployment
+      steps:
+        - id: manual_approval
+          name: Manual Approval
+          approval:
+            uses: harness
+            with:
+              timeout: 1d
+              groups: [approvers_group]
+              min-approvers: 1
     - id: deploy
       name: Deploy to Local K8s
       service:
