@@ -28,15 +28,22 @@ pipeline:
                 - v7
     - id: approve_deploy
       name: Approve Deployment
-      steps:
-        - id: manual_approval
-          name: Manual Approval
-          approval:
-            uses: harness
-            with:
-              timeout: 1d
-              groups: [approvers_group]
-              min-approvers: 1
+      type: Approval
+      spec:
+        execution:
+          steps:
+            - id: manual_approval
+              name: Manual Approval
+              type: HarnessApproval
+              spec:
+                approvalMessage: Please review and approve the deployment to local Kubernetes.
+                includeQRCode: false
+                approvers:
+                  userGroups:
+                    - approvers_group
+                  minimumCount: 1
+                  disallowPipelineInitiator: false
+                executionTimeout: 1d
     - id: deploy
       name: Deploy to Local K8s
       service:
