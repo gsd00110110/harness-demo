@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
     version: process.env.APP_VERSION || "1.0.0",
     build: process.env.BUILD_NUMBER || "local",
     environment: process.env.NODE_ENV || "development",
-    message: "November 12, 2026 -1  - Harness CICD Demo"
+    message: "November 12, 2026 -2  - Harness CICD Demo"
   });
 });
 
