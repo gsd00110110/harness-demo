@@ -2,11 +2,6 @@ pipeline:
   id: NodeJSCICD_1
   name: NodeJSCICD-1
   description: Build the Node.js app image, push it to Docker Hub, require manual approval, and deploy it to the local Kubernetes cluster.
-  inputs:
-  image_tag:
-    type: string
-    description: Enter the Docker image tag (example: v7)
-    required: true
   clone:
     enabled: true
     connector: httpsgithubcomgsd00110110harness_demo
@@ -15,6 +10,21 @@ pipeline:
       type: branch
       name: main
   stages:
+    steps:
+    - id: get_tags
+      run:
+        container:
+          image: alpine:3.20   # needs curl and jq; install them in the script if missing
+        script: |-
+          TAGS=$(curl -s "https://hub.docker.com/v2/repositories/gsd00110110/harness/tags?page_size=100" | jq -r '.results[].name' | grep '^v[0-9]*$' | sort -Vr)
+          TAG1=$(echo "$TAGS" | sed -n '1p'); TAG2=$(echo "$TAGS" | sed -n '2p')
+          NEXT_TAG="v$(( $(echo "$TAG1" | sed 's/v//') + 1 ))"
+          export TAG1 TAG2 NEXT_TAG
+        output:
+          - name: TAG1
+          - name: TAG2
+          - name: NEXT_TAG
+
     - id: build
       name: Build and Push
       runtime: cloud
@@ -29,9 +39,9 @@ pipeline:
             with:
               connector: httpshubdockercomrepositorydockergsd00110110harnessgeneral
               repo: gsd00110110/harness
-              tags:
-                - <+input>.image_tag
-    
+              tags: 
+                - ${{ stages.get_tags.output.NEXT_TAG }}
+           
     - id: approve_deploy
       name: Approve Deployment
       steps:
@@ -54,6 +64,13 @@ pipeline:
                     - qa
                     - prod
                   required: true
+                deploy_tag:
+                  description: Select Docker image tag
+                  required: true
+                  enum:
+                    - ${{ stages.get_tags.output.NEXT_TAG }}
+                    - ${{ stages.get_tags.output.TAG1 }}
+                    - ${{ stages.get_tags.output.TAG2 }}
 
     - id: deploy
       name: Deploy to Local K8s

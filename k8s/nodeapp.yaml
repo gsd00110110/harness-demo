@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: nodeapp
-        image: gsd00110110/harness:v7
+        image: gsd00110110/harness:${{ stages.get_tags.output.NEXT_TAG }}
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
